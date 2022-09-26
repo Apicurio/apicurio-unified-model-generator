@@ -67,16 +67,16 @@ public class UnifiedModelGenerator {
         Logger.info("Output directory: %s", outputDirectory.getAbsolutePath());
 
         // Create the base packages
-        basePackage = new PackageModel();
+        basePackage = PackageModel.builder().build();
         basePackage.setName("io.apicurio.datamodels");
         modelIndex.indexPackage(basePackage);
 
-        coreModelPackage = new PackageModel();
+        coreModelPackage = PackageModel.builder().build();
         coreModelPackage.setName("io.apicurio.datamodels.core.models");
         modelIndex.indexPackage(coreModelPackage);
 
         // Create some common base classes
-        nodeClass = new ClassModel();
+        nodeClass = ClassModel.builder().build();
         nodeClass.setName("Node");
         nodeClass.setPackage(coreModelPackage);
         nodeClass.setCore(true);
@@ -84,7 +84,7 @@ public class UnifiedModelGenerator {
         coreModelPackage.getClasses().put(nodeClass.getName(), nodeClass);
         modelIndex.indexClass(nodeClass);
 
-        extensibleNodeClass = new ClassModel();
+        extensibleNodeClass = ClassModel.builder().build();
         extensibleNodeClass.setName("ExtensibleNode");
         extensibleNodeClass.setPackage(coreModelPackage);
         extensibleNodeClass.setCore(true);
@@ -92,7 +92,7 @@ public class UnifiedModelGenerator {
         coreModelPackage.getClasses().put(extensibleNodeClass.getName(), extensibleNodeClass);
         modelIndex.indexClass(extensibleNodeClass);
 
-        documentClass = new ClassModel();
+        documentClass = ClassModel.builder().build();
         documentClass.setName("Document");
         documentClass.setPackage(coreModelPackage);
         documentClass.setAbstract(true);
@@ -153,7 +153,7 @@ public class UnifiedModelGenerator {
      * @param specPackageName
      */
     private PackageModel mkpkgs(String specPackageName) {
-        PackageModel rval = new PackageModel();
+        PackageModel rval = PackageModel.builder().build();
         rval.setName(specPackageName);
 
         boolean done = false;
@@ -162,7 +162,7 @@ public class UnifiedModelGenerator {
             String packageName = _package.getName();
             String parentPackageName = this.parentpkg(packageName);
             PackageModel parentPackage = modelIndex.lookupPackage(parentPackageName, (_t) -> {
-                PackageModel model = new PackageModel();
+                PackageModel model = PackageModel.builder().build();
                 model.setName(parentPackageName);
                 return model;
             });
@@ -194,7 +194,7 @@ public class UnifiedModelGenerator {
      */
     private void createClassModels(Specification specification, PackageModel specPackage) {
         specification.getEntities().forEach(entity -> {
-            ClassModel model = new ClassModel();
+            ClassModel model = ClassModel.builder().build();
             model.setName(entity.getName());
             model.setPackage(specPackage);
             model.setAbstract(false);
@@ -217,7 +217,7 @@ public class UnifiedModelGenerator {
      */
     private void createFieldModels(Entity entity, ClassModel model) {
         entity.getProperties().forEach(property -> {
-            FieldModel field = new FieldModel();
+            FieldModel field = FieldModel.builder().build();
             field.setName(property.getName());
             field.setType(property.getType());
             model.getFields().put(property.getName(), field);
@@ -257,7 +257,7 @@ public class UnifiedModelGenerator {
             PackageModel ancestorPackageModel = classModel.getPackage().getParent();
             while (ancestorPackageModel != null) {
                 if (needsParentClass(ancestorPackageModel, classModel.getName())) {
-                    ClassModel ancestorClass = new ClassModel();
+                    ClassModel ancestorClass = ClassModel.builder().build();
                     ancestorClass.setName(classModel.getName());
                     ancestorClass.setParent(classModel.getParent());
                     ancestorClass.setPackage(ancestorPackageModel);
